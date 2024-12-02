@@ -1,0 +1,14 @@
+presencas-js:
+    filters: rjsmin
+    output: ckanext-presencas/%(version)s-presencas.js
+    contents:
+        - presencas.js
+    extra:
+        preload:
+            - base/main
+
+presencas-css:
+    filters: cssutils
+    output: ckanext-presencas/%(version)s-presencas.css
+    contents:
+        - presencas.css
