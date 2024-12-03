@@ -4,60 +4,27 @@
 {% asset 'presencas/presencas-css' %}
 {% asset 'presencas/presencas-js' %}
 
-{% set datas = h.presencas_retorna_minimo_maximo_data_inicio() %}
 {% if name == "data_inicio" %}
-
+    {% set datas = h.presencas_retorna_minimo_maximo_data_inicio() %}
     {% if datas != None %}
-    <div class="sliders pt-4 pb-4 mt-4">
-        <div class="intervalo-slide"></div>
-        <span class="slide1-val">1950</span>
-        <input class="slide" type="range" min="{{ datas[0] }}" max="{{ datas[1] }}" value="{{ datas[0] }}"/>
-        <span class="slide2-val">2024</span>
-        <input class="slide" type="range" min="{{ datas[0] }}" max="{{ datas[1] }}" value="{{ datas[1] }}"/>
-    </div>
-    <div class="botoes-data-inicio d-flex align-content-center justify-content-around gap-1 mb-3">
-        <button class="botao-data-inicio p-2 text-center" onclick="restauraMinMax()">Restaurar botões</button>
-        <button class="botao-data-inicio p-2 text-center" onclick="removeParametros()">Remover intervalo</button>
-        <button class="botao-data-inicio p-2 text-center" onclick="adicionaParametros()">Aplicar intervalo</button>
+    <div data-module="presencas-data-inicio">
+        <div class="sliders pt-4 pb-4 mt-4">
+            <div class="intervalo-slide"></div>
+            <span class="slide1-val"></span>
+            <input class="slide" type="range" min="{{ datas[0] }}" max="{{ datas[1] }}" value="{{ datas[0] }}"/>
+            <span class="slide2-val"></span>
+            <input class="slide" type="range" min="{{ datas[0] }}" max="{{ datas[1] }}" value="{{ datas[1] }}"/>
+        </div>
+        <div class="botoes-data-inicio d-flex align-content-center justify-content-around gap-1 mb-3">
+            <button class="botao-data-inicio p-2 text-center">Restaurar botões</button>
+            <button class="botao-data-inicio p-2 text-center">Remover intervalo</button>
+            <button class="botao-data-inicio p-2 text-center">Aplicar intervalo</button>
+        </div>
     </div>
     {% else %}
-    <p class="module-content empty">{{ _('There are no {facet_type} that match this search').format(facet_type=title) }}</p>
+    <p class="module-content empty">{{ _("Não há datasets com data de início configurada") }}</p>
     {% endif %}
 {% else %}
-    {% with items = items or h.get_facet_items_dict(name, search_facets) %}
-        {% if items %}
-        <nav aria-label="{{ _('Filter by: {title}').format(title=title) }}">
-            <ul class="list-unstyled nav nav-simple nav-facet">
-            {% for item in items %}
-                {% set href = h.remove_url_param(name, item.name, extras=extras, alternative_url=alternative_url) if item.active else h.add_url_param(new_params={name: item.name}, extras=extras, alternative_url=alternative_url) %}
-                {% set label = label_function(item) if label_function else item.display_name %}
-                {% set label_truncated = label|truncate(22) if not label_function else label %}
-                {% set count = count_label(item['count']) if count_label else ('%d' % item['count']) %}
-                <li class="nav-item {% if item.active %} active{% endif %}">
-                <a href="{{ href }}" aria-label="{{ _('Search datasets by {name}: {label}').format(name=name, label=label_truncated) }}" {% if label != label_truncated %} data-bs-title="{{ label }}" data-bs-toggle="tooltip" {% endif %}>
-                    <span class="item-label">{{ label_truncated }}</span>
-                    <span class="hidden separator"> - </span>
-                    <span class="item-count badge">{{ count }}</span>
-
-                    {% if item.active %}<span class="facet-close"> <i class="fa fa-solid fa-circle-xmark"></i></span>{% endif %}
-                </a>
-                </li>
-            {% endfor %}
-            </ul>
-        </nav>
-
-        <p class="module-footer">
-            {% if h.get_param_int('_%s_limit' % name) %}
-            {% if h.has_more_facets(name, search_facets) %}
-                <a href="{{ h.remove_url_param('_%s_limit' % name, replace=0, extras=extras, alternative_url=alternative_url) }}" class="read-more">{{ _('Show More {facet_type}').format(facet_type=title) }}</a>
-            {% endif %}
-            {% else %}
-            <a href="{{ h.remove_url_param('_%s_limit' % name, extras=extras, alternative_url=alternative_url) }}" class="read-more">{{ _('Show Only Popular {facet_type}').format(facet_type=title) }}</a>
-            {% endif %}
-        </p>
-        {% else %}
-        <p class="module-content empty">{{ _('There are no {facet_type} that match this search').format(facet_type=title) }}</p>
-        {% endif %}
-    {% endwith %}
+    {{ super() }}
 {% endif %}
 {% endblock %}

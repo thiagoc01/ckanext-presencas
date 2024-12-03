@@ -1,95 +1,105 @@
-const ESPACO_MAXIMO = 1;     // Máximo de um ano de diferença
-let sliderEsquerda = $('.slide:nth-of-type(1)');
-let sliderDireita = $('.slide:nth-of-type(2)');
-let intervaloSlide = $('.intervalo-slide');
-const valorMinimoSlider = sliderEsquerda.attr('min');
-const valorMaximoSlider = sliderEsquerda.attr('max');
+ckan.module("presencas-data-inicio", function ($, _) {
 
-$('.slide:nth-of-type(1)').on('input change', () => {
+    "use strict";
 
-    if (parseInt(sliderDireita.val()) - parseInt(sliderEsquerda.val()) <= ESPACO_MAXIMO)
-        sliderEsquerda.val(parseInt(sliderDireita.val()) - ESPACO_MAXIMO);
+    return {
 
-    $('.slide1-val').first().text(sliderEsquerda.val());
+      options: {
+        debug: false,
+      },
 
-    preencheIntervalosSliders();
-})
+      initialize: function () {
+          $.proxyAll(this, /restauraMinMax|removeParametros|adicionaParametros/);
+          this.ESPACO_MAXIMO = 1;     // Máximo de um ano de diferença
+          this.sliderEsquerda = this.$('.slide:nth-of-type(1)');
+          this.sliderDireita = this.$('.slide:nth-of-type(2)');
+          this.intervaloSlide = this.$('.intervalo-slide');
+          this.valorMinimoSlider = this.sliderEsquerda.attr('min');
+          this.valorMaximoSlider = this.sliderEsquerda.attr('max');
 
-$('.slide:nth-of-type(2)').on('input change', () => {
+          this.$('.slide:nth-of-type(1)').on('input', () => {
 
-    if (parseInt(sliderDireita.val()) - parseInt(sliderEsquerda.val()) <= ESPACO_MAXIMO)
-        sliderDireita.val(parseInt(sliderEsquerda.val()) + ESPACO_MAXIMO);
+              if (parseInt(this.sliderDireita.val()) - parseInt(this.sliderEsquerda.val()) <= this.ESPACO_MAXIMO)
+                  this.sliderEsquerda.val(parseInt(this.sliderDireita.val()) - this.ESPACO_MAXIMO);
 
-    $('.slide2-val').first().text(sliderDireita.val());
+              this.$('.slide1-val').first().text(this.sliderEsquerda.val());
 
-    preencheIntervalosSliders();
-});
+              this.preencheIntervalosSliders();
+          });
 
-function preencheIntervalosSliders()
-{
-    porcentagemEsquerda = ( (sliderEsquerda.val() - valorMinimoSlider) / (valorMaximoSlider - valorMinimoSlider) ) * 100;
-    porcentagemDireita = ( (sliderDireita.val() - valorMinimoSlider) / (valorMaximoSlider - valorMinimoSlider) ) * 100;
-    intervaloSlide.css('background', `linear-gradient(90deg, #e1e7f6 ${porcentagemEsquerda}% ,
-        #ef0614 ${porcentagemEsquerda}% , #ef0614 ${porcentagemDireita}%, #e1e7f6 ${porcentagemDireita}%)`);
-}
+          this.$('.slide:nth-of-type(2)').on('input', () => {
 
-function restauraMinMax()
-{
-    let primeiroInput = $('.slide:nth-of-type(1)')
-    let segundoInput = $('.slide:nth-of-type(2)')
+              if (parseInt(this.sliderDireita.val()) - parseInt(this.sliderEsquerda.val()) <= this.ESPACO_MAXIMO)
+                  this.sliderDireita.val(parseInt(this.sliderEsquerda.val()) + this.ESPACO_MAXIMO);
 
-    primeiroInput.val(primeiroInput.attr('min'))
-    segundoInput.val(segundoInput.attr('max'))
+              this.$('.slide2-val').first().text(this.sliderDireita.val());
 
-    sliderEsquerda.trigger('input')
-    sliderDireita.trigger('input')
-}
+              this.preencheIntervalosSliders();
+          });
 
-function removeParametros()
-{
-    const url = new URL(window.location.href);
+          this.verificaExistenciaDataInicio();
+          this.sliderEsquerda.trigger('input');
+          this.sliderDireita.trigger('input');
+          this.$('button:nth-of-type(1)').on('click', this.restauraMinMax);
+          this.$('button:nth-of-type(2)').on('click', this.removeParametros);
+          this.$('button:nth-of-type(3)').on('click', this.adicionaParametros);
+      },
 
-    if (url.searchParams.has('data_inicio'))
-    {
-        url.searchParams.delete('data_inicio');
-        
-        window.location = url;
-    }
-}
+      preencheIntervalosSliders:  function () {
 
-function adicionaParametros()
-{
-    const url = new URL(window.location.href);
-    url.searchParams.set('data_inicio', `[${sliderEsquerda.val()} TO ${sliderDireita.val()}]`);
-    window.location = url;
-}
+          let porcentagemEsquerda = ( (this.sliderEsquerda.val() - this.valorMinimoSlider) / (this.valorMaximoSlider - this.valorMinimoSlider) ) * 100;
+          let porcentagemDireita = ( (this.sliderDireita.val() - this.valorMinimoSlider) / (this.valorMaximoSlider - this.valorMinimoSlider) ) * 100;
+          this.intervaloSlide.css('background', `linear-gradient(90deg, #e1e7f6 ${porcentagemEsquerda}% ,
+              #ef0614 ${porcentagemEsquerda}% , #ef0614 ${porcentagemDireita}%, #e1e7f6 ${porcentagemDireita}%)`);
+      },
 
-function verificaExistenciaDataInicio()
-{
-    const url = new URL(window.location.href);
+      verificaExistenciaDataInicio:  function () {
 
-    if (url.searchParams.has('data_inicio'))
-    {
-        let data_inicio = url.searchParams.get('data_inicio');
+          const url = new URL(window.location.href);
 
-        let [min, max] = data_inicio.match(/[0-9]+/g);
+          if (url.searchParams.has('data_inicio'))
+          {
+              let data_inicio = url.searchParams.get('data_inicio');
 
-        sliderEsquerda.val(min);
-        sliderDireita.val(max);
-    }
-}
+              let [min, max] = data_inicio.match(/[0-9]+/g);
 
-verificaExistenciaDataInicio()
-sliderEsquerda.trigger('input')
-sliderDireita.trigger('input')
+              this.sliderEsquerda.val(min);
+              this.sliderDireita.val(max);
+          }
+      },
 
-ckan.module("presencas-module", function ($, _) {
-  "use strict";
-  return {
-    options: {
-      debug: false,
-    },
+      restauraMinMax:  function () {
 
-    initialize: function () {},
-  };
+          let primeiroInput = this.$('.slide:nth-of-type(1)');
+          let segundoInput = this.$('.slide:nth-of-type(2)');
+
+          primeiroInput.val(primeiroInput.attr('min'));
+          segundoInput.val(segundoInput.attr('max'));
+
+          this.sliderEsquerda.trigger('input');
+          this.sliderDireita.trigger('input');
+      },
+
+      removeParametros:  function () {
+
+          const url = new URL(window.location.href);
+
+          if (url.searchParams.has('data_inicio'))
+          {
+              url.searchParams.delete('data_inicio');
+
+              window.location = url;
+          }
+      },
+
+      adicionaParametros: function () {
+
+          const url = new URL(window.location.href);
+
+          url.searchParams.set('data_inicio', `[${this.sliderEsquerda.val()} TO ${this.sliderDireita.val()}]`);
+
+          window.location = url;
+      }
+    };
+
 });
