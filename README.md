@@ -16,10 +16,12 @@ Compatibilidade com versões do CKAN:
 | 2.6 e anterior | não testado    |
 | 2.7             | não testado   |
 | 2.8             | não testado   |
+| 2.9             | não testado   |
 | 2.10             | testado   |
+| 2.11            | testado   |
 
 
-## Installation
+## Instalação
 
 1. Ative o venv do CKAN:
 

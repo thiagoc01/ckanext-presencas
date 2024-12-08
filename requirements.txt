@@ -1,2 +1,2 @@
 cssutils
-dateutil
+python-dateutil

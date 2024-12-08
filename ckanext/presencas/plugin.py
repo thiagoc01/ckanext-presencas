@@ -2,6 +2,26 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 import ast
 from dateutil.parser import parse
+import json
+
+def converte_string_lista_exibicao(dataset, nome):
+
+    # O ckanext-scheming possui um bug para exibir multiple_text se apenas um foi inserido
+    # O código abaixo transforma string para uma lista com um item antes de exibir
+
+    if dataset.get(nome) and type(dataset.get(nome)) != list:
+
+        dataset[nome] = json.loads(json.dumps([dataset.get(nome)]))
+
+def converte_string_lista_indexacao(dataset, nome):
+
+    if dataset.get(nome):
+
+        try:
+            json.loads(dataset.get(nome))
+
+        except Exception:
+            dataset[nome] = json.dumps([dataset.get(nome)])
 
 def adiciona_indexacao_listas(dataset, nome_lista):
 
@@ -82,6 +102,11 @@ class PresencasPlugin(plugins.SingletonPlugin):
     
     def before_dataset_index(self, pkg_dict):
 
+        converte_string_lista_indexacao(pkg_dict, 'cidade_atuacao')
+        converte_string_lista_indexacao(pkg_dict, 'estado_atuacao')
+        converte_string_lista_indexacao(pkg_dict, 'pais_atuacao')
+        converte_string_lista_indexacao(pkg_dict, 'linguagens')
+
         adiciona_indexacao_listas(pkg_dict, 'cidade_atuacao')
         adiciona_indexacao_listas(pkg_dict, 'estado_atuacao')
         adiciona_indexacao_listas(pkg_dict, 'pais_atuacao')
@@ -119,6 +144,12 @@ class PresencasPlugin(plugins.SingletonPlugin):
         return search_results
 
     def before_dataset_view(self, pkg_dict):
+
+        converte_string_lista_exibicao(pkg_dict, 'cidade_atuacao')
+        converte_string_lista_exibicao(pkg_dict, 'estado_atuacao')
+        converte_string_lista_exibicao(pkg_dict, 'pais_atuacao')
+        converte_string_lista_exibicao(pkg_dict, 'linguagens')
+
         return pkg_dict
     
     # ITemplateHelpers
