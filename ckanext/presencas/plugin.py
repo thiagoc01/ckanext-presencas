@@ -149,6 +149,7 @@ class PresencasPlugin(plugins.SingletonPlugin):
         converte_string_lista_exibicao(pkg_dict, 'estado_atuacao')
         converte_string_lista_exibicao(pkg_dict, 'pais_atuacao')
         converte_string_lista_exibicao(pkg_dict, 'linguagens')
+        converte_string_lista_exibicao(pkg_dict, 'links')
 
         return pkg_dict
     
