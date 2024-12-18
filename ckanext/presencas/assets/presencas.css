@@ -18,7 +18,36 @@
 .slide::-moz-range-track {
   -moz-appearance: none;
 }
+
 .slide::-moz-range-thumb {
+  height: 1.2rem;
+  width: 1.2rem;
+  border-radius: 50%;
+  background-color: #ef0614;
+  pointer-events: auto;
+  border: none;
+}
+
+.slide::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+}
+
+.slide::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 1.2rem;
+  width: 1.2rem;
+  border-radius: 50%;
+  background-color: #ef0614;
+  pointer-events: auto;
+  border: none;
+}
+
+.slide::-ms-track {
+  appearance: none;
+}
+
+.slide::-ms-thumb {
+  appearance: none;
   height: 1.2rem;
   width: 1.2rem;
   border-radius: 50%;
