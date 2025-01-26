@@ -82,7 +82,6 @@ class PresencasPlugin(plugins.SingletonPlugin):
         
         facets_dict['cidade'] = toolkit._('Cidades')
         facets_dict['estado'] = toolkit._('Estados')
-        facets_dict['pais'] = toolkit._('Países')
         facets_dict['cidade_atuacao'] = toolkit._('Cidades de atuação')
         facets_dict['estado_atuacao'] = toolkit._('Estados de atuação')
         facets_dict['pais_atuacao'] = toolkit._('Países de atuação')
